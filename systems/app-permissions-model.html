@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>An Application Permissions Model for honoring User Privacy Preferences</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
+
+<body>
+    <h1>An Application Permissions Model for honoring User Privacy Preferences</h1>
+    <p>VVG &bull; March 4, 2023</p>
+
+    <h2>Abstract</h2>
+    <p>We propose a logical permissions model for use by applications that would honor a user's privacy preferences on
+        their device.</p>
+
+    <h2>Background and Motivation</h2>
+    <p>At the fundamental level, an application is instantiated by the operating system
+        as a <b>process</b>. Security is typically tied to the user and most operating
+        systems have some form of Role-based permissions system where the user gets a
+        set of permissions based on those explicitly assigned to that user and those
+        implicitly derived from the roles that the user has been assigned. This model
+        does not take into account the fact that the same user may want Application A
+        to be granted a certain permission while Application B is denied the same
+        permission. For example: a photosharing app is given permission to access the
+        camera whereas an RSS newsreader app is denied the permission.
+    </p>
+    <p>We propose a different organization of the permissions and grants that is centered
+        on the user's perspective.</p>
+    <h2>Architecture</h2>
+    <h3>Terminology</h3>
+    <dl>
+        <dt>Process</dt>
+        <dd>An operating system process that is an instantiation of an executable program.</dd>
+
+        <dt>Capability</dt>
+        <dd>A functionality that a process may access in order to do a user task. eg: File I/O, Webcam, Network
+            communication etc.,</dd>
+
+        <dt>Capability Profile</dt>
+        <dd>A set of capabilities bundled together.</dd>
+
+        <dt>Permission Request</dt>
+        <dd>A request by a process for access to a specific capability eg: File I/O.</dd>
+
+        <dt>Permission Grant</dt>
+        <dd>A token that signifies the grant of a specific permission.</dd>
+    </dl>
+
+    <h3>Default Capability Profiles</h3>
+    <p>The default capability profiles are standardized. We define the following standard default capability profiles.
+    </p>
+    <ol>
+        <li><b>capability-profile-zero:</b> This is the capability profile that is empty. A process is by default
+            assigned this capability profile. It grants no capabilities to the attached process.</li>
+
+        <li><b>capability-profile-service:</b> This is the capability profile that is for a service. No user inputs
+            such as touch gestures, keyboard input, webcam etc., are granted. The only capabilities in this profile
+            are those typically required for services.</li>
+
+        <li><b>capability-profile-basicuser:</b> This is the basic capability profile that for a user. Basic
+            input/output capabilities are available.</li>
+    </ol>
+
+    <h3>Custom Capability Profiles</h3>
+    <p>Custom capability profiles are custom groupings of various capabilities bundled together and may be customized by
+        a developer or user for deployment on a device.</p>
+
+    <h3>Application Manifest</h3>
+    <p>The application is accompanied by a manifest file that declares the set of capabilities that are required by the
+        application. The app developer must make no assumptions regarding the grant of permissions to the requested
+        capability. For eg: An app may need to be able to take a photograph with the camera on the device. Therefore, it
+        may
+        list it as a needed capability. However, a user might specify that camera capability has been turned off (for
+        example, in their default profile or custom profile). It is the responsibility of the application developer to
+        handle these permission denials by the user and fail gracefully.</p>
+
+    <h3>Capability Manager</h3>
+    <p>This is a standard UI component that is used for managing the capabilities granted to an application. This user
+        interface may be surfaced by any application that uses this permissions model. The capability manager is used
+        to attach capability profiles to an application. The capability manager looks at the attached profile and the
+        capability profile requested by the application through its manifest and automatically grants the permissions
+        granted in the attached profile. The application receives an event notification after the capabilities profile
+        has been attached and it can respond to it by updating the UI or notifying the user any other way.
+    </p>
+
+    <h2>Typical use</h2>
+    <p>In this section we describe the typical use of an application that uses this permissions model.</p>
+
+    <h3>User wants to install an app</h3>
+    <p>The user goes to the "Add/Remove programs" control panel. If the control panel application has been granted the
+        "Install app" capability, then the user interface will show the interface for Adding/removing programs. If not,
+        it will show a message to the user that they don't have the capability to install the application and will show
+        the link to the capability manager user interface.</p>
+    <p>The user can go to the capability manager and add the capability to "Add/Remove programs" and then proceed to
+        install the program.</p>
+
+    <h3>User has installed an app</h3>
+    <p>Upon installation, the capability profile requested by the application is compared with the user's default
+        capability profile and the capabilities that are allowed are granted. The user is shown a list of requested
+        capabilities that have been denied based on the user's capability profle.</p>
+
+    <h3>User runs the app</h3>
+    <p>The app makes a call to query the currently attached capability profile and sets up the user interface
+        accordingly, enabling only the functionality based on the granted capabilities. Any disabled functionality shows
+        the link to the capability manager along with a message that the functionality is disabled due to the user's
+        capability profile attached to the process.</p>
+
+    <h3>User grants a new capability/revokes an existing capability to the application&apos;s capability profile</h3>
+    <p>When the user uses the capability manager UI to grant a new capability to an application, the application
+        receives a notification about change in attached capabilities. It then responds by updating its UI accordingly
+        and enabling the functionality. Similarly, when a capability is revoked, the application receives the
+        notification and responds accoringly by updating its UI.</p>
+</body>
+
+</html>
