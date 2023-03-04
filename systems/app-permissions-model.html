@@ -2,17 +2,19 @@
 <html>
 
 <head>
-    <title>An Application Permissions Model for honoring User Privacy Preferences</title>
+    <title>An Application Permissions Model for honoring User Preferences on Device Capability use</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
 </head>
 
 <body>
-    <h1>An Application Permissions Model for honoring User Privacy Preferences</h1>
+    <h1>An Application Permissions Model for honoring User Preferences on Device Capability use</h1>
     <p>VVG &bull; March 4, 2023</p>
 
     <h2>Abstract</h2>
     <p>We propose a logical permissions model for use by applications that would honor a user's privacy preferences on
-        their device.</p>
+        their device. Our proposal requires developers to change their assumptions about capability demands (eg: request
+        webcam, request file i/o) and be prepared to degrade gracefully if the user's preferences deny these capability
+        request. We illustrate how the user interaction flow works under this scenario.</p>
 
     <h2>Background and Motivation</h2>
     <p>At the fundamental level, an application is instantiated by the operating system
@@ -111,6 +113,9 @@
         receives a notification about change in attached capabilities. It then responds by updating its UI accordingly
         and enabling the functionality. Similarly, when a capability is revoked, the application receives the
         notification and responds accoringly by updating its UI.</p>
+    <footer>
+        <p>Tags: systems, security, privacy, permissions</p>
+    </footer>
 </body>
 
 </html>
