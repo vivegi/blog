@@ -135,7 +135,7 @@
             Similarly, the subset \(\{y, p\}\) also covers all clauses.</p>
         <p>Let \(\hat{V}\) denote the set of variables of \(\phi\) that are not in \(V\).
             <b>Are there properties of \(\hat{V}\) that are useful for SAT solving?</b></p>
-        <p>Given two clauses \((x \lor y) \land (\neg x \lor z)\), we can use the <a href="https://en.wikipedia.org/wiki/Resolution_(logic)">Resolution rule</a> to obtain the equisatisfiable formula \((x \lor y) \land (\neg x \lor z) land (y \lor z)\) where \((y \lor z)\) is the resolvent of the two clauses containing complementary literals.</p>
+        <p>Given two clauses \((x \lor y) \land (\neg x \lor z)\), we can use the <a href="https://en.wikipedia.org/wiki/Resolution_(logic)">Resolution rule</a> to obtain the equisatisfiable formula \((x \lor y) \land (\neg x \lor z) \land (y \lor z)\) where \((y \lor z)\) is the resolvent of the two clauses containing complementary literals for \(x\).</p>
         <p>Suppose, for each variable \(v \in V\), we consider the pair of clauses that contain the complementary literals of \(v\), compute its resolvent and add it to the set of clauses, <b>does it make <code>ModifiedDPLL2</code> run faster by influencing the choice of the most prolific literal?</b></p>
 
         <footer>
