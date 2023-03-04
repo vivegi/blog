@@ -50,11 +50,14 @@
 
         <aside>
             <ul>
-                <li>← denotes assignment. For instance, "largest ← item" means that the value of largest changes to the value of item.</li>
+                <li>← denotes assignment. For instance, "largest ← item" means that the value 
+                    of largest changes to the value of item.</li>
                 <li><b>return</b> terminates the algorithm and outputs the following value.</li>
-                <li>The <b>or</b> in the return statement is a short-circuiting operator. Φ ∧ {l} denotes the simplified result of substituting "true" for l in Φ.</li>
-                <li>(a,b) ← (c,d) denotes an atomic compound assignment. In this example, a is assigned the value of c and b is assigned the value of d.</li>
-                <li>In this pseudocode, unit-propagate(l, Φ) and pure-literal-assign(l, Φ) are functions that return the result of applying unit propagation and the pure literal rule, respectively, to the literal l and the formula Φ. In other words, they replace every occurrence of l with "true" and every occurrence of not l with "false" in the formula Φ, and simplify the resulting formula.</li>
+                <li>The <b>or</b> in the return statement is a short-circuiting operator. 
+                    Φ ∧ {l} denotes the simplified result of substituting "true" for l in Φ.</li>
+                <li><code>(a,b) ← (c,d)</code> denotes an atomic compound assignment. In this example, 
+                    <code>a</code> is assigned the value of <code>c</code> and <code>b</code> is assigned the value of <code>d</code>.</li>
+                <li>In this pseudocode, <code>unit-propagate(l, Φ)</code> and <code>pure-literal-assign(l, Φ)</code> are functions that return the result of applying unit propagation and the pure literal rule, respectively, to the literal <code>l</code> and the formula <code>Φ</code>. In other words, they replace every occurrence of <code>l</code> with "true" and every occurrence of \(\neg l\) with "false" in the formula <code>Φ</code>, and simplify the resulting formula.</li>
             </ul>
         </aside>
 
