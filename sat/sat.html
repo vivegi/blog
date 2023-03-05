@@ -1,38 +1,48 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Some Thoughts on Boolean Satisfiability</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-    </head>
-    <body>
-        <h1>Some Thoughts on Boolean CNF Satisfiability</h1>
-        <p>VVG &bull; March 4, 2023</p>
-        <h2>Abstract</h2>
-        <p>Boolean CNF Satisfiability (CNF-SAT) is an important problem that is NP-Complete. 
-            Therefore, techniques for effectively solving specific instances of CNF-SAT that 
-            occur practically are of great interest. In this paper, we look at some ideas for
-            effectively solving a subset of CNF-SAT.
-        </p>
 
-        <h2>Definitions and Theorems</h2>
-        <p><b>Definition 1 (<i>k</i>-SAT):&nbsp;</b>A CNF formula in which each clause has at most <i>k</i> literals is called a <i>k</i>-SAT formula.</p>
+<head>
+    <title>Some Thoughts on Boolean Satisfiability</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
 
-        <p><b>Theorem 2 (<i>k</i>-SAT reducibility):&nbsp;</b>A <i>k</i>-SAT formula can be reduced in polynomial time into a <i>3</i>-SAT formula.</p>
+<body>
+    <h1>Some Thoughts on Boolean CNF Satisfiability</h1>
+    <p>VVG &bull; March 4, 2023</p>
+    <h2>Abstract</h2>
+    <p>Boolean CNF Satisfiability (CNF-SAT) is an important problem that is NP-Complete.
+        Therefore, techniques for effectively solving specific instances of CNF-SAT that
+        occur practically are of great interest. In this paper, we look at some ideas for
+        effectively solving a subset of CNF-SAT.
+    </p>
 
-        <p><b>Theorem 3 (<i>2</i>-SAT is in P):&nbsp;</b>The satisfiability of a <i>2</i>-SAT formula can be determined in polynomial time.</p>
+    <h2>Definitions and Theorems</h2>
+    <p><b>Definition 1 (<i>k</i>-SAT):&nbsp;</b>A CNF formula in which each clause has at most <i>k</i> literals is
+        called a <i>k</i>-SAT formula.</p>
 
-        <p><b>Definition 4 (Horn clause):&nbsp;</b>A clause that has at most one positive literal is called a Horn clause.</p>
+    <p><b>Theorem 2 (<i>k</i>-SAT reducibility):&nbsp;</b>A <i>k</i>-SAT formula can be reduced in polynomial time into
+        a <i>3</i>-SAT formula.</p>
 
-        <p><b>Definition 5 (Horn-SAT):&nbsp;</b>The CNF satisfiability problem where every clause in the formula is a Horn clause is called Horn-satisfiability (Horn-SAT).</p>
+    <p><b>Theorem 3 (<i>2</i>-SAT is in P):&nbsp;</b>The satisfiability of a <i>2</i>-SAT formula can be determined in
+        polynomial time.</p>
 
-        <p><b>Theorem 6 (Horn-SAT is in P):&nbsp;</b>The satisfiability of a <i>2</i>-SAT formula can be determined in polynomial time.</p>
+    <p><b>Definition 4 (Horn clause):&nbsp;</b>A clause that has at most one positive literal is called a Horn clause.
+    </p>
 
-        <p><b>Theorem 7 (Splitting a formula):&nbsp;</b>A CNF formula \(F\) may be split as \(F \Leftrightarrow (v \land F_v) \lor (\neg v \land F_{\neg v}) \) where \(v\) is a variable in \(F\).</p>
+    <p><b>Definition 5 (Horn-SAT):&nbsp;</b>The CNF satisfiability problem where every clause in the formula is a Horn
+        clause is called Horn-satisfiability (Horn-SAT).</p>
 
-        <h2>Main Idea</h2>
-        <p>One of the well known algorithms for SAT solving is the Davis-Putnam-Logemann-Loveand (DPLL) algorithm. 
-            The DPLL algorithm [1] from <a href="https://en.wikipedia.org/wiki/DPLL_algorithm">Wikipedia</a> [2] is given below for reference.</p>
-        <pre>
+    <p><b>Theorem 6 (Horn-SAT is in P):&nbsp;</b>The satisfiability of a <i>2</i>-SAT formula can be determined in
+        polynomial time.</p>
+
+    <p><b>Theorem 7 (Splitting a formula):&nbsp;</b>A CNF formula \(F\) may be split as \(F \Leftrightarrow (v \land
+        F_v) \lor (\neg v \land F_{\neg v}) \) where \(v\) is a variable in \(F\).</p>
+
+    <h2>Main Idea</h2>
+    <p>One of the well known algorithms for SAT solving is the Davis-Putnam-Logemann-Loveand (DPLL) algorithm.
+        The DPLL algorithm [1] from <a href="https://en.wikipedia.org/wiki/DPLL_algorithm">Wikipedia</a> [2] is given
+        below for reference.</p>
+    <pre>
         Algorithm DPLL
             Input: A set of clauses Φ.
             Output: A truth value indicating whether Φ is satisfiable.
@@ -49,28 +59,38 @@
             return DPLL(Φ ∧ {l}) or DPLL(Φ ∧ {not(l)});            
         </pre>
 
-        <aside>
-            <ul>
-                <li>← denotes assignment. For instance, "largest ← item" means that the value 
-                    of largest changes to the value of item.</li>
-                <li><b>return</b> terminates the algorithm and outputs the following value.</li>
-                <li>The <b>or</b> in the return statement is a short-circuiting operator. 
-                    Φ ∧ {l} denotes the simplified result of substituting "true" for l in Φ.</li>
-                <li><code>(a,b) ← (c,d)</code> denotes an atomic compound assignment. In this example, 
-                    <code>a</code> is assigned the value of <code>c</code> and <code>b</code> is assigned the value of <code>d</code>.</li>
-                <li>In this pseudocode, <code>unit-propagate(l, Φ)</code> and <code>pure-literal-assign(l, Φ)</code> are functions that return the result of applying unit propagation and the pure literal rule, respectively, to the literal <code>l</code> and the formula <code>Φ</code>. In other words, they replace every occurrence of <code>l</code> with "true" and every occurrence of \(\neg l\) with "false" in the formula <code>Φ</code>, and simplify the resulting formula.</li>
-            </ul>
-        </aside>
+    <aside>
+        <ul>
+            <li>← denotes assignment. For instance, "largest ← item" means that the value
+                of largest changes to the value of item.</li>
+            <li><b>return</b> terminates the algorithm and outputs the following value.</li>
+            <li>The <b>or</b> in the return statement is a short-circuiting operator.
+                Φ ∧ {l} denotes the simplified result of substituting "true" for l in Φ.</li>
+            <li><code>(a,b) ← (c,d)</code> denotes an atomic compound assignment. In this example,
+                <code>a</code> is assigned the value of <code>c</code> and <code>b</code> is assigned the value of
+                <code>d</code>.
+            </li>
+            <li>In this pseudocode, <code>unit-propagate(l, Φ)</code> and <code>pure-literal-assign(l, Φ)</code> are
+                functions that return the result of applying unit propagation and the pure literal rule, respectively,
+                to the literal <code>l</code> and the formula <code>Φ</code>. In other words, they replace every
+                occurrence of <code>l</code> with "true" and every occurrence of \(\neg l\) with "false" in the formula
+                <code>Φ</code>, and simplify the resulting formula.
+            </li>
+        </ul>
+    </aside>
 
-        <p>Given a CNF formula \(\phi_{original}\), we first reduce it in polynomial time to a <i>3</i>-SAT formula \(\phi\).</p>
-        <p>By a repeated application of Theorem 7, we can split \(\phi\) into a disjunction containing <i>2</i>-SAT formulas or Horn-SAT formulas. 
-            We can stop if any one of the subformulas are True (i.e., \(\phi\) is satisfiable) 
-            or if all of the subformulas are False (i.e., \(\phi\) is unsatisfiable).</p>
-        <p>By Theorem 3, 2-SAT is in P. By Theorem 6, Horn-SAT is in P. So, we can check its satisfiability in polynomial time.</p>
+    <p>Given a CNF formula \(\phi_{original}\), we first reduce it in polynomial time to a <i>3</i>-SAT formula
+        \(\phi\).</p>
+    <p>By a repeated application of Theorem 7, we can split \(\phi\) into a disjunction containing <i>2</i>-SAT formulas
+        or Horn-SAT formulas.
+        We can stop if any one of the subformulas are True (i.e., \(\phi\) is satisfiable)
+        or if all of the subformulas are False (i.e., \(\phi\) is unsatisfiable).</p>
+    <p>By Theorem 3, 2-SAT is in P. By Theorem 6, Horn-SAT is in P. So, we can check its satisfiability in polynomial
+        time.</p>
 
-        <p>Using these special cases, we can modify the basic DPLL as follows:</p>
+    <p>Using these special cases, we can modify the basic DPLL as follows:</p>
 
-        <pre>
+    <pre>
             Algorithm ModifiedDPLL
                 Input: A set of clauses Φ.
                 Output: A truth value indicating whether Φ is satisfiable.
@@ -91,15 +111,20 @@
                 return ModifiedDPLL(Φ ∧ {l}) or ModifiedDPLL(Φ ∧ {not(l)});            
         </pre>
 
-        <h3>Branch heuristics: Implementing <code>choose-literal(Φ)</code></h3>
-        <p>A naive implementation of <code>choose-literal(Φ)</code> would choose any literal.</p>
-        <p>We can do better by choosing the most-prolific literal occurring in Φ. This ensures that when we split the formula using Theorem 7 as specified in the last line containing the return statement, one of those subformulas has fewer 3-SAT clauses compared to the others.</p>
+    <h3>Branch heuristics: Implementing <code>choose-literal(Φ)</code></h3>
+    <p>A naive implementation of <code>choose-literal(Φ)</code> would choose any literal.</p>
+    <p>We can do better by choosing the most-prolific literal occurring in Φ. This ensures that when we split the
+        formula using Theorem 7 as specified in the last line containing the return statement, one of those subformulas
+        has fewer 3-SAT clauses compared to the others.</p>
 
-        <h3>Evaluation order of subformulas</h3>
-        <p>Let \(Φ_{1} \Leftrightarrow Φ ∧ {l}\) and \(Φ_{2} \Leftrightarrow Φ ∧ {\neg l}\). Denote \(Φ_{min}, Φ_{max}\) respectively as the subformula with the fewer number of 3-SAT clauses among \(Φ_{1}, Φ_{2}\). We can now change the recursive evaluation of the algorithm to evaluate \(Φ_{min}\) first followed by \(Φ_{max}\).</p>
-        <p>The algorithm modified with these changes is given below:</p>
+    <h3>Evaluation order of subformulas</h3>
+    <p>Let \(Φ_{1} \Leftrightarrow Φ ∧ {l}\) and \(Φ_{2} \Leftrightarrow Φ ∧ {\neg l}\). Denote \(Φ_{min}, Φ_{max}\)
+        respectively as the subformula with the fewer number of 3-SAT clauses and greater number of 3-SAT clauses among
+        \(Φ_{1}, Φ_{2}\). We can now change the recursive evaluation of the algorithm to evaluate \(Φ_{min}\) first
+        followed by \(Φ_{max}\).</p>
+    <p>The algorithm modified with these changes is given below:</p>
 
-        <pre>
+    <pre>
             Algorithm ModifiedDPLL2
                 Input: A set of clauses Φ.
                 Output: A truth value indicating whether Φ is satisfiable.
@@ -124,37 +149,68 @@
                 return ModifiedDPLL2(Φ_min) or ModifiedDPLL2(Φ_max);</b>            
         </pre>
 
-        <p>The algorithm uses the standard polynomial time implementation of 2-SAT algorithm [4] and linear time implementation of HornSAT algorithm [5].</p>
+    <p>The algorithm uses the standard polynomial time implementation of 2-SAT algorithm [4] and linear time
+        implementation of HornSAT algorithm [5].</p>
 
-        <h2>Analysis</h2>
-        <p><code>ModifiedDPLL2</code> is a greedy algorithm that tries to force the subformulas into a polynomial-time solvable SAT instance such as Horn-SAT or 2-SAT. In the worst-case, the subformula is unsatisfiable and the short-circuit evaluation has to evaluate the second subformula.</p>
-        <p><code>choose-prolific-literal(Φ)</code> makes a choice of the next literal for branching based on how prolifically it occurs in Φ. This choice must also not conflict with any previous literal choices. If we are unable to make a choice then it means the literal choices conflict and the subformula is unsatisfiable. In that case we return empty from <code>choose-prolific-literal(Φ)</code>.</p>
-        <p>After we have made a choice for the literal <code>l</code>, we split <code>Φ</code> into <code>Φ_1, Φ_2</code> and then choose <code>Φ_min, Φ_max</code>.</p>
-        <p>Finally, we make the recursive calls in a short-circuit manner and in the order such that <code>Φ_min</code> is solved first and only if it is unsatisfiable, <code>Φ_max</code> is solved next.</p>
-        <p>In the worst-case, this algorithm has the same complexity as the basic <code>DPLL</code> algorithm. However, in cases where the subformulas have linear (Horn-SAT) or polynomial (2-SAT) algorithms, the <code>ModifiedDPLL2</code> algorithm runs faster in practice.</p>
+    <h2>Analysis</h2>
+    <p><code>ModifiedDPLL2</code> is a greedy algorithm that tries to force the subformulas into a polynomial-time
+        solvable SAT instance such as Horn-SAT or 2-SAT. In the worst-case, the subformula is unsatisfiable and the
+        short-circuit evaluation has to evaluate the second subformula.</p>
+    <p><code>choose-prolific-literal(Φ)</code> makes a choice of the next literal for branching based on how
+        prolifically it occurs in Φ. This choice must also not conflict with any previous literal choices. If we are
+        unable to make a choice then it means the literal choices conflict and the subformula is unsatisfiable. In that
+        case we return empty from <code>choose-prolific-literal(Φ)</code>.</p>
+    <p>After we have made a choice for the literal <code>l</code>, we split <code>Φ</code> into <code>Φ_1, Φ_2</code>
+        and then choose <code>Φ_min, Φ_max</code>.</p>
+    <p>Finally, we make the recursive calls in a short-circuit manner and in the order such that <code>Φ_min</code> is
+        solved first and only if it is unsatisfiable, <code>Φ_max</code> is solved next.</p>
+    <p>In the worst-case, this algorithm has the same complexity as the basic <code>DPLL</code> algorithm. However, in
+        cases where the subformulas have linear (Horn-SAT) or polynomial (2-SAT) algorithms, the
+        <code>ModifiedDPLL2</code> algorithm runs faster in practice.
+    </p>
 
-        <h2>For Future Work</h2>
-        <p>We propose a few open questions related to this problem for future exploration.</p>
-        <p>Suppose \(V\) is any subset of variables in \(\phi\) such that all clauses are covered by \(V\). 
-            For example: \((x \lor y \lor z) \land (\neg x \lor p \lor \neg q)\), the subset \(\{x\}\) covers all clauses. 
-            Similarly, the subset \(\{y, p\}\) also covers all clauses.</p>
-        <p>Let \(\hat{V}\) denote the set of variables of \(\phi\) that are not in \(V\).
-            <b>Are there properties of \(\hat{V}\) that are useful for SAT solving?</b></p>
-        <p>Given two clauses \((x \lor y) \land (\neg x \lor z)\), we can use the <a href="https://en.wikipedia.org/wiki/Resolution_(logic)">Resolution rule</a> to obtain the equisatisfiable formula \((x \lor y) \land (\neg x \lor z) \land (y \lor z)\) where \((y \lor z)\) is the resolvent of the two clauses containing complementary literals for \(x\).</p>
-        <p>Suppose, for each variable \(v \in V\), we consider the pair of clauses that contain the complementary literals of \(v\), compute its resolvent and add it to the set of clauses, <b>does it make <code>ModifiedDPLL2</code> run faster by influencing the choice of the most prolific literal?</b></p>
+    <h2>For Future Work</h2>
+    <p>We propose a few open questions related to this problem for future exploration.</p>
+    <p>Suppose \(V\) is any subset of variables in \(\phi\) such that all clauses are covered by \(V\).
+        For example: \((x \lor y \lor z) \land (\neg x \lor p \lor \neg q)\), the subset \(\{x\}\) covers all clauses.
+        Similarly, the subset \(\{y, p\}\) also covers all clauses.</p>
+    <p>Let \(\hat{V}\) denote the set of variables of \(\phi\) that are not in \(V\).
+        <b>Are there properties of \(\hat{V}\) that are useful for SAT solving?</b>
+    </p>
+    <p>Given two clauses \((x \lor y) \land (\neg x \lor z)\), we can use the <a
+            href="https://en.wikipedia.org/wiki/Resolution_(logic)">Resolution rule</a> to obtain the equisatisfiable
+        formula \((x \lor y) \land (\neg x \lor z) \land (y \lor z)\) where \((y \lor z)\) is the resolvent of the two
+        clauses containing complementary literals for \(x\).</p>
+    <p>Suppose, for each variable \(v \in V\), we consider the pair of clauses that contain the complementary literals
+        of \(v\), compute its resolvent and add it to the set of clauses, <b>does it make <code>ModifiedDPLL2</code> run
+            faster by influencing the choice of the most prolific literal?</b></p>
 
-        <footer>
-            <h2>References</h2>
-            <p><span>[1]:</span>&nbsp;Davis, Martin; Logemann, George; Loveland, Donald (1961). "A Machine Program for Theorem Proving". Communications of the ACM. 5 (7): 394&ndash;397. <a href="https://doi.org/10.1145%2F368273.368557">doi:10.1145/368273.368557</a>. hdl:2027/mdp.39015095248095. S2CID 15866917.</p>
-            <p><span>[2]:</span>&nbsp;Davis-Putnam-Logemann-Loveland Algorithm. <a href="https://en.wikipedia.org/wiki/DPLL_algorithm">Wikipedia page: DPLL Algorithm</a>.</p>
-            <p><span>[3]:</span>&nbsp;Ouyang, Ming (1998). "How Good Are Branching Rules in DPLL?". Discrete Applied Mathematics. 89 (1&ndash;3): 281&ndash;286. <a href="https://doi.org/10.1016%2FS0166-218X%2898%2900045-6">doi:10.1016/S0166-218X(98)00045-6</a>.</p>
-            <p><span>[4]:</span>&nbsp;Aspvall, Bengt; Plass, Michael F.; Tarjan, Robert E. (1979), <a href="http://www.math.ucsd.edu/~sbuss/CourseWeb/Math268_2007WS/2SAT.pdf">"A linear-time algorithm for testing the truth of certain quantified boolean formulas"</a> (PDF), Information Processing Letters, 8 (3): 121–123, <a href="https://doi.org/10.1016%2F0020-0190%2879%2990002-4">doi:10.1016/0020-0190(79)90002-4</a>.</p>
-            <p><span>[5]:</span>&nbsp;Dowling, William F.; Gallier, Jean H. (1984), "Linear-time algorithms for testing the satisfiability of propositional Horn formulae", Journal of Logic Programming, 1 (3): 267–284, <a href="https://doi.org/10.1016%2F0743-1066%2884%2990014-1">doi:10.1016/0743-1066(84)90014-1</a>, MR <a href="https://mathscinet.ams.org/mathscinet-getitem?mr=0770156">0770156</a>.</p>
+    <footer>
+        <h2>References</h2>
+        <p><span>[1]:</span>&nbsp;Davis, Martin; Logemann, George; Loveland, Donald (1961). "A Machine Program for
+            Theorem Proving". Communications of the ACM. 5 (7): 394&ndash;397. <a
+                href="https://doi.org/10.1145%2F368273.368557">doi:10.1145/368273.368557</a>.
+            hdl:2027/mdp.39015095248095. S2CID 15866917.</p>
+        <p><span>[2]:</span>&nbsp;Davis-Putnam-Logemann-Loveland Algorithm. <a
+                href="https://en.wikipedia.org/wiki/DPLL_algorithm">Wikipedia page: DPLL Algorithm</a>.</p>
+        <p><span>[3]:</span>&nbsp;Ouyang, Ming (1998). "How Good Are Branching Rules in DPLL?". Discrete Applied
+            Mathematics. 89 (1&ndash;3): 281&ndash;286. <a
+                href="https://doi.org/10.1016%2FS0166-218X%2898%2900045-6">doi:10.1016/S0166-218X(98)00045-6</a>.</p>
+        <p><span>[4]:</span>&nbsp;Aspvall, Bengt; Plass, Michael F.; Tarjan, Robert E. (1979), <a
+                href="http://www.math.ucsd.edu/~sbuss/CourseWeb/Math268_2007WS/2SAT.pdf">"A linear-time algorithm for
+                testing the truth of certain quantified boolean formulas"</a> (PDF), Information Processing Letters, 8
+            (3): 121–123, <a
+                href="https://doi.org/10.1016%2F0020-0190%2879%2990002-4">doi:10.1016/0020-0190(79)90002-4</a>.</p>
+        <p><span>[5]:</span>&nbsp;Dowling, William F.; Gallier, Jean H. (1984), "Linear-time algorithms for testing the
+            satisfiability of propositional Horn formulae", Journal of Logic Programming, 1 (3): 267–284, <a
+                href="https://doi.org/10.1016%2F0743-1066%2884%2990014-1">doi:10.1016/0743-1066(84)90014-1</a>, MR <a
+                href="https://mathscinet.ams.org/mathscinet-getitem?mr=0770156">0770156</a>.</p>
 
-        </footer>
-        <p>&copy; VVG &mdash; All rights reserved.</p>
-    </body>
+    </footer>
+    <p>&copy; VVG &mdash; All rights reserved.</p>
+</body>
 
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 </html>
