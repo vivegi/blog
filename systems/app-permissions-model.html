@@ -27,6 +27,12 @@
         permission. For example: a photosharing app is given permission to access the
         camera whereas an RSS newsreader app is denied the permission.
     </p>
+    <p>Also, the grant of permissions for various capabilities requested by an application is typically declared through
+        an intent specified in an application manifest file. The user interface used by the OS upon installation of the
+        application presents a simplistic dialog that requests the permissions with the only option being able to grant
+        the permissions for the entire set requested in order to install the application or to deny the installation. We
+        believe this is not user-centric and does not take into account a user&s preferences. In this paper, we propose
+        an alternative user-centric capability profile management.</p>
     <p>We propose a different organization of the permissions and grants that is centered
         on the user's perspective.</p>
     <h2>Architecture</h2>
